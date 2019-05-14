@@ -1,31 +1,24 @@
 <template>
-  <ion-card>
-    <ion-item>
-      <ion-label position="floating">Nombre</ion-label>
-      <ion-input @input="greeting = $event.target.value"></ion-input>
-    </ion-item>
-    <ion-button color="tertiary" expand="full" @click="handleClick">Hello</ion-button>
-  </ion-card>
+  <div>
+    <ion-card v-for="post in posts" :key="post.data.id">
+      <ion-card-content>
+        <ion-label >{{ post.data.title }}</ion-label>  
+      </ion-card-content>
+    </ion-card>
+  </div>
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
-      greeting: ""
+      posts: []
     };
   },
-  methods: {
-    handleClick() {
-      this.$ionic.alertController
-        .create({
-          header: "alert",
-          subHeader: "subtitle",
-          message: this.greeting,
-          buttons: ["Ok"]
-        })
-        .then(a => a.present());
-    }
+  async mounted(){
+    const response = await axios.get('https://www.reddit.com/r/halo.json');
+    this.posts = response.data.data.children
   }
 };
 </script>
